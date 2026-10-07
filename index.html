@@ -191,28 +191,61 @@ footer{background:#0c1116;color:#8e989f;padding:35px 0}.foot{display:flex;justif
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  const slider=document.getElementById("segmentSlider");
-  const prev=document.getElementById("segPrev");
-  const next=document.getElementById("segNext");
-  if(!slider) return;
-  function step(){
-    const card=slider.querySelector(".segment-card");
-    if(!card) return 300;
-    const gap=parseFloat(getComputedStyle(slider).gap||0);
-    return card.getBoundingClientRect().width+gap;
+
+  const slider = document.getElementById("segmentSlider");
+  const prev = document.getElementById("segPrev");
+  const next = document.getElementById("segNext");
+
+  if (!slider) return;
+
+  function tamanhoCard() {
+    const card = slider.querySelector(".segment-card");
+    return card ? card.offsetWidth : 300;
   }
-  function goNext(){
-    const max=slider.scrollWidth-slider.clientWidth;
-    if(slider.scrollLeft>=max-10) slider.scrollTo({left:0,behavior:"smooth"});
-    else slider.scrollBy({left:step(),behavior:"smooth"});
+
+  function proximo() {
+    const maxScroll = slider.scrollWidth - slider.clientWidth;
+
+    if (slider.scrollLeft >= maxScroll - 10) {
+      slider.scrollTo({
+        left: 0,
+        behavior: "smooth"
+      });
+    } else {
+      slider.scrollBy({
+        left: tamanhoCard(),
+        behavior: "smooth"
+      });
+    }
   }
-  function goPrev(){
-    if(slider.scrollLeft<=10) slider.scrollTo({left:slider.scrollWidth-slider.clientWidth,behavior:"smooth"});
-    else slider.scrollBy({left:-step(),behavior:"smooth"});
+
+  function anterior() {
+    if (slider.scrollLeft <= 10) {
+      slider.scrollTo({
+        left: slider.scrollWidth,
+        behavior: "smooth"
+      });
+    } else {
+      slider.scrollBy({
+        left: -tamanhoCard(),
+        behavior: "smooth"
+      });
+    }
   }
-  if(prev) prev.addEventListener("click",goPrev);
-  if(next) next.addEventListener("click",goNext);
-  setInterval(goNext,2500);
+
+  if (next) {
+    next.addEventListener("click", proximo);
+  }
+
+  if (prev) {
+    prev.addEventListener("click", anterior);
+  }
+
+  /* AUTOPLAY */
+  setInterval(function () {
+    proximo();
+  }, 2500);
+
 });
 </script>
 
